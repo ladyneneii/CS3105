@@ -5,7 +5,7 @@ const Card = () => {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate("/"); // Navigate to the home page ("/" route)
+    navigate("/SecondPage");
   };
 
   return (
@@ -19,7 +19,7 @@ const Card = () => {
             bulk of the card's content.
           </p>
           <Button color="danger" onClick={handleButtonClick}>
-            Go to Home Page
+            Go to Second Page
           </Button>
         </div>
       </div>
