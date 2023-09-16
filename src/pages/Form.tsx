@@ -1,7 +1,9 @@
+import { useState } from "react";
+import { Skeleton } from "@mui/material";
 import { userSchema } from "../validations/UserValidation";
 
 const Form = () => {
-  const createUser = async (e) => {
+  const createUser = async (e: any) => {
     e.preventDefault();
 
     let formData = {
@@ -11,15 +13,25 @@ const Form = () => {
     };
 
     const isValid = await userSchema.isValid(formData);
-    console.log(isValid);
   };
+
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <>
       <form onSubmit={createUser}>
-        <div className="mb-3">
-          <input type="text" className="form-control" placeholder="Name..." />
-        </div>
+        {isLoading ? (
+          <div className="mb-3">
+            <input type="text" className="form-control" placeholder="Name..." />
+          </div>
+        ) : (
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            width={345}
+            height={100}
+          />
+        )}
         <div className="mb-3">
           <input
             type="text"
