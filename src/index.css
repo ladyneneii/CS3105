@@ -1,3 +1,7 @@
 .custom-card {
   width: 18rem;
 }
+
+.form__input {
+  width: 200px;
+}
