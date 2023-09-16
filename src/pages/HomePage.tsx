@@ -7,15 +7,26 @@ const HomePage = () => {
   const handleButtonClick = () => {
     navigate("/Feed");
   };
+  const handleButtonClickForm = () => {
+    navigate("/Form");
+  };
 
   return (
     <>
       <div className="position-absolute bottom-50 end-50">
         <h1>Hello, World!</h1>
         <p>By {name}</p>
-        <Button color="primary" onClick={handleButtonClick}>
-          Go to main page
-        </Button>
+        <div>
+          <Button color="primary" onClick={handleButtonClick}>
+            Go to main page
+          </Button>
+        </div>
+        <br />
+        <div>
+          <Button color="primary" onClick={handleButtonClickForm}>
+            Go to form
+          </Button>
+        </div>
       </div>
     </>
   );
