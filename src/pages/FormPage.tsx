@@ -39,7 +39,7 @@ const Form = () => {
     }
 
     const timer = setTimeout(() => {
-      setIsFormSubmitted(false); // set to false so the invalid input/s message does not show up after the user inputted valid inputs
+      setIsFormSubmitted(false); // set to false so the invalid input/s message does not show up after the user inputted valid inputs. The invalid input/s message gets triggered once isLoading is set back to true after 5s, so if you don't set isFormSubmitted back to false, that means isLoading = isFormSubmitted = true, triggering the invalid input/s message.
       setIsLoading(true);
     }, 5000);
 
@@ -74,6 +74,9 @@ const Form = () => {
 
   return (
     <>
+      {isFormSubmitted && !isLoading && (
+        <Alert color="primary">Processing submission.</Alert>
+      )}
       {!isLoading && (
         <Alert color="warning">
           Wait for 5 seconds for the shimmer to disappear.
