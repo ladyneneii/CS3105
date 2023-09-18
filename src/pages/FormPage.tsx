@@ -1,36 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { Skeleton } from "@mui/material";
 import { userSchema } from "../validations/UserValidation";
-import "../index.css";
+import Alert from "../components/Alert";
 
 const Form = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const createUser = async (e: any) => {
-    e.preventDefault();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isValid, setIsValid] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-    let formData = {
-      name: e.target[0].value,
-      email: e.target[1].value,
-      password: e.target[2].value,
-      telnumber: e.target[3].value,
-      date: e.target[4].value,
-      gender: e.target[5].value,
-      mother: e.target[6].value,
-    };
-
-    const isValid = await userSchema.isValid(formData);
-    if (isValid) {
-      setIsLoading(false);
-      console.log(formData);
-    } else {
-      console.log("Invalid form input/s.");
-    }
-  };
-
-  const [inputHeight, setInputHeight] = useState(0);
-  const [textHeight, setTextHeight] = useState(0);
-  const [questionTextWidth, setQuestionTextWidth] = useState(0);
-  const [optionWidth, setOptionWidth] = useState(0);
+  const [inputHeight, setInputHeight] = useState(38);
+  const [textHeight, setTextHeight] = useState(24);
+  const [questionTextWidth, setQuestionTextWidth] = useState(265);
+  const [optionWidth, setOptionWidth] = useState(51);
 
   useEffect(() => {
     const input = document.querySelector<HTMLInputElement>(".form-control");
@@ -42,7 +23,8 @@ const Form = () => {
       document.querySelector<HTMLInputElement>(".form-check-label");
 
     if (input) {
-      setInputHeight(input.getBoundingClientRect().height);
+      let inputHeight = input.getBoundingClientRect().height;
+      setInputHeight(inputHeight);
     }
     if (mother__label) {
       let textHeight = mother__label.getBoundingClientRect().height;
@@ -55,10 +37,51 @@ const Form = () => {
         setOptionWidth(optionCheckWidth + optionLabelWidth);
       }
     }
+
+    const timer = setTimeout(() => {
+      setIsFormSubmitted(false); // set to false so the invalid input/s message does not show up after the user inputted valid inputs
+      setIsLoading(true);
+    }, 5000);
+
+    // Clear the timer to avoid unexpected side effects
+    return () => clearTimeout(timer);
   });
+
+  const createUser = async (e: any) => {
+    e.preventDefault();
+    setIsFormSubmitted(true);
+
+    let formData = {
+      name: e.target[0].value,
+      email: e.target[1].value,
+      password: e.target[2].value,
+      telnumber: e.target[3].value,
+      date: e.target[4].value,
+      gender: e.target[5].value,
+      mother: e.target[6].value,
+    };
+
+    setIsLoading(!(await userSchema.isValid(formData))); // shimmer only if it passed the form validation.
+    // if it does not pass the form validation, isLoading = true; otherwise, false.
+
+    // if (isValid) {
+    //   setIsLoading(false);
+    //   console.log(formData);
+    // } else {
+    //   console.log("invalid inputs");
+    // }
+  };
 
   return (
     <>
+      {!isLoading && (
+        <Alert color="warning">
+          Wait for 5 seconds for the shimmer to disappear.
+        </Alert>
+      )}
+      {isFormSubmitted && isLoading && (
+        <Alert color="danger">Invalid input/s. Try again.</Alert>
+      )}
       <div className="row mt-5">
         <div className="mx-auto col-10 col-md-8 col-lg-6">
           {/* Start of form */}
@@ -70,6 +93,7 @@ const Form = () => {
                   type="text"
                   className="form-control"
                   placeholder="Name..."
+                  required
                 />
               ) : (
                 <Skeleton
@@ -88,6 +112,7 @@ const Form = () => {
                   type="email"
                   className="form-control"
                   placeholder="name@example.com"
+                  required
                 />
               ) : (
                 <Skeleton
@@ -106,6 +131,7 @@ const Form = () => {
                   type="password"
                   className="form-control"
                   placeholder="password123"
+                  required
                 />
               ) : (
                 <Skeleton
@@ -124,6 +150,7 @@ const Form = () => {
                   type="tel"
                   className="form-control"
                   placeholder="Phone Number..."
+                  required
                 />
               ) : (
                 <Skeleton
@@ -229,7 +256,7 @@ const Form = () => {
             </div>
 
             {/* SUBMIT */}
-            <input type="submit" />
+            <input type="submit" value="Submit" />
           </form>
           {/* End of form */}
         </div>
